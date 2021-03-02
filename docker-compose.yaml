@@ -1,0 +1,34 @@
+version: '3.8'
+services:
+  app:
+    container_name: justicehouse-api
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      - DATABASE_URL=postgres://postgres:your_password@db:5432/justicehouse
+    depends_on:
+      - db
+    networks:
+      - justicehouse-network
+
+  db:
+    container_name: justicehouse-db
+    image: postgres:13
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your_password
+      POSTGRES_DB: justicehouse
+    volumes:
+      - justicehouse-data:/var/lib/postgresql/data
+    networks:
+      - justicehouse-network
+
+networks:
+  justicehouse-network:
+    driver: bridge
+
+volumes:
+  justicehouse-data:
